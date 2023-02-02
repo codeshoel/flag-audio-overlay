@@ -1,4 +1,10 @@
 from pydub import AudioSegment
+import os
+
+peers_parent = []
+peers = []
+
+# index[13]
 
 
 
@@ -7,28 +13,60 @@ class AudioMerge:
     track_1 = None
     track_2 = None
 
-    def __init__(self, song_one=None, song_two=None):
-        self.track_one = song_one
-        self.track_two = song_two
+
+    peers_parent = []
+    peers = []
+
+    def __init__(self):
+        pass
 
         
 
-        if self.track_one and self.track_two == None:
-            return "You have no tracks available for merge."
+        # if self.track_1 and self.track_2 == None:
+        #     return "You have no tracks available for merge."
+
+    def overlay_multiple(self, dir):
+        for files in os.scandir(dir):
+            self.peers_parent.append(files.name)
+
+
+        for idx in range(len(self.peers_parent)):
+            if (self.peers_parent[idx] not in peers) and (len(self.peers) < 2):
+                self.peers.append(self.peers_parent[idx])
+    
+        audio_1 = self.peers[0]
+        audio_2 = self.peers[1]
+
+        self.track_1 = AudioSegment.from_file("./{:s}/{:s}".format(dir, audio_1), format="mp3")
+        self.track_2 = AudioSegment.from_file("./{:s}/{:s}".format(dir, audio_2), format="mp3")
+
+        try:
+            overlay_track = self.track_1.overlay(self.track_2, position=0)
+
+        except Exception as e:
+            return e
+
+        else:
+            try:
+                overlay_track.export("Inteera-networks-{:s}.mp3".format(audio_1[17:31]), format="mp3")
+                print("title 1:", audio_1)
+                print("title 2:", audio_2)
+            except Exception as e:
+                return e
+                # pass
+            else:
+                if (os.path.isfile("./{:s}/{:s}/".format(dir, audio_1)) and os.path.isfile("./{:s}/{:s}/".format(dir, audio_2))):
+                    os.remove("./{:s}/{:s}".format(dir, audio_1))
+                    os.remove("./{:s}/{:s}".format(dir, audio_2))
+                else:
+                    print("No such file in specified dir.")
+
 
     def merge_overlay_tracks(self):
-        self.track_1 = AudioSegment.from_file("./songs/{:s}".format(self.track_one), format="mp3")
-        self.track_2 = AudioSegment.from_file("./songs/{:s}".format(self.track_two), format="mp3")
-
-        # louder = self.track_1 + 6
-
-
-        overlay_track = self.track_1.overlay(self.track_2, position=0)
-        return overlay_track.export("overlayed.mp3", format="mp3")
+        pass
 
 
 
-# C:\Users\USER\Documents\resp\InterraNetwork\audiomerge\songs
-# track-2.wav
-overlay_track = AudioMerge("1-001674547782.1_20230124T080943.367Z_1_102.mp3", "1-001674547782.1_20230124T080955.260Z_07032031620.mp3")
-overlay_track.merge_overlay_tracks()
+
+overlay_track = AudioMerge()
+overlay_track.overlay_multiple("dir_st")
