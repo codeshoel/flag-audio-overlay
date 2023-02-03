@@ -1,9 +1,10 @@
 # Dirs
 error_files
 files
-env
+.env
 overlayed_files
+init_files
 
 # Files
-/client
-/test
+./client
+./test
