@@ -1,9 +1,9 @@
 # Dirs
-error_files/
-files/
-env/
-overlayed_files/
+error_files
+files
+env
+overlayed_files
 
 # Files
-.client.py
-.test.py
+/client
+/test
