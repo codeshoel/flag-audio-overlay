@@ -1,8 +1,9 @@
-
-
-# Ignored files
-./songs/*
-
-# Ignored dirs
+# Dirs
+error_files/
+files/
 env/
+overlayed_files/
 
+# Files
+.client.py
+.test.py

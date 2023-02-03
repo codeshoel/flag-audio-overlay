@@ -1,10 +1,12 @@
 from pydub import AudioSegment
 import os
+import shutil
+from datetime import datetime
 
-peers_parent = []
-peers = []
+# peers_parent = []
+# peers = []
 
-# index[13]
+# # index[13]
 
 
 
@@ -17,56 +19,82 @@ class AudioMerge:
     peers_parent = []
     peers = []
 
-    def __init__(self):
-        pass
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+    def __init__(self, error_dir="error_files", output_dir="overlayed_files", original_files_dir="initial_files"):
         
+        """"
+        The constructor checks the system for essential directories existance, 
+        if check returns True the system ignore creating the existing directory.
+        if check returns False the system creates the missing directory. 
+        """
+        
+        self.overlayed_files_dir = output_dir
+        self.error_files_dir = error_dir
+        self.original_files_dir = original_files_dir
 
-        # if self.track_1 and self.track_2 == None:
-        #     return "You have no tracks available for merge."
+        if not os.path.exists(self.error_files_dir):
+            os.mkdir(self.error_files_dir)
 
-    def overlay_multiple(self, dir):
-        for files in os.scandir(dir):
-            self.peers_parent.append(files.name)
+        if not os.path.exists(self.overlayed_files_dir):
+            os.mkdir(self.overlayed_files_dir)
 
+        if not os.path.exists(self.original_files_dir):
+            os.mkdir(self.original_files_dir)
 
-        for idx in range(len(self.peers_parent)):
-            if (self.peers_parent[idx] not in peers) and (len(self.peers) < 2):
-                self.peers.append(self.peers_parent[idx])
-    
-        audio_1 = self.peers[0]
-        audio_2 = self.peers[1]
+    def overlay_multiple(self, dir, *args, **kwargs):
+        """
+        dir -> Directory where the audio files are stored.
+        output_dir -> Directory where the overlayed files are output.
+        """
+        date = datetime.now()
+        date_time = str(date).replace(' ', '_').replace(':', '-').replace('.', '_')
 
-        self.track_1 = AudioSegment.from_file("./{:s}/{:s}".format(dir, audio_1), format="mp3")
-        self.track_2 = AudioSegment.from_file("./{:s}/{:s}".format(dir, audio_2), format="mp3")
+        files = os.listdir(dir)
 
-        try:
-            overlay_track = self.track_1.overlay(self.track_2, position=0)
+        if len(files) != 1:
+            for index in range(1, len(files)):
+                
+                if len(self.peers) < 2 and files[index] not in self.peers:
+                    self.peers.append(files[index])
 
-        except Exception as e:
-            return e
+            for _ in range(1, len(self.peers)):
+                audio_1 = self.peers[0]
+                audio_2 = self.peers[1]
+                
+                if audio_1 and audio_2 is not None:
+                    if str(audio_1).startswith(audio_1[0:15]) == str(audio_2).startswith(audio_1[0:15]):
+                        
+                        try:
+                            self.track_1 = AudioSegment.from_file("./{:s}/{:s}".format(dir, audio_1), format="mp3")
+                            self.track_2 = AudioSegment.from_file("./{:s}/{:s}".format(dir, audio_2), format="mp3")
+                            
+                            overlay_track = self.track_1.overlay(self.track_2, position=0)
+                            overlay_track.export("{:s}/{:s}-{:s}.mp3".format(self.overlayed_files_dir, audio_1[0:13], date_time), format="mp3")
+                            
+                            shutil.move("{:s}/{:s}".format(dir, audio_1), "{:s}/{:s}".format(self.original_files_dir, audio_1))
+                            shutil.move("{:s}/{:s}".format(dir, audio_2), "{:s}/{:s}".format(self.original_files_dir, audio_2))
+                            
+                            self.peers.clear()
+                        except Exception as e:
+                            return (e.add_note("Error, There was an error while perfoming overlay action,\n error file(s) are moved to ./error_file/."))
 
+                    else:
+                        # Moves none-unique file into the error file directory.
+                        shutil.move("{:s}/{:s}".format(dir, audio_1), "{:s}/{:s}".format(self.error_files_dir, audio_1))
+                        self.peers.clear()
+                        return (f"Files with Unique ID are not peerable.[{audio_1} <=> {audio_2}]")
         else:
-            try:
-                overlay_track.export("Inteera-networks-{:s}.mp3".format(audio_1[17:31]), format="mp3")
-                print("title 1:", audio_1)
-                print("title 2:", audio_2)
-            except Exception as e:
-                return e
-                # pass
-            else:
-                if (os.path.isfile("./{:s}/{:s}/".format(dir, audio_1)) and os.path.isfile("./{:s}/{:s}/".format(dir, audio_2))):
-                    os.remove("./{:s}/{:s}".format(dir, audio_1))
-                    os.remove("./{:s}/{:s}".format(dir, audio_2))
-                else:
-                    print("No such file in specified dir.")
-
-
-    def merge_overlay_tracks(self):
-        pass
+            # Moves none-unique file into the error file directory.
+            shutil.move("{:s}/{:s}".format(dir, files[0]), "{:s}/{:s}".format(self.error_files_dir, files[0]))
 
 
 
+if __name__ == '__main__':
+    overlay_track = AudioMerge()
+    if len(os.listdir('files')) != 0:
+        while len(os.listdir('files')) > 0:
+            overlay_track.overlay_multiple(dir="files")
 
-overlay_track = AudioMerge()
-overlay_track.overlay_multiple("dir_st")
+        print("Done..!")
+    print("File directory is empty.")
