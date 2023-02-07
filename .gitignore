@@ -1,9 +1,15 @@
 # Dirs
 error_files
 files
+<<<<<<< HEAD
 env
 overlayed_files
 initial_files
+=======
+.env
+overlayed_files
+init_files
+>>>>>>> binary
 
 # Files
 ./client
