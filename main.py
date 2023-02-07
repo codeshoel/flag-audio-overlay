@@ -3,11 +3,6 @@ import os
 import shutil
 from datetime import datetime
 
-# peers_parent = []
-# peers = []
-
-# # index[13]
-
 
 
 class AudioMerge:
