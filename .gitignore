@@ -1,0 +1,10 @@
+# Dirs
+error_files
+files
+env
+overlayed_files
+initial_files
+
+# Files
+/client
+/test
