@@ -6,5 +6,5 @@ overlayed_files
 initial_files
 
 # Files
-/client
-/test
+./client
+./test
