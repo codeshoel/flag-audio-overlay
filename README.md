@@ -41,10 +41,13 @@
     - Add C:\ffmpeg\bin to the empty field and confirm changes with OK
     ![Image 8](https://phoenixnap.com/kb/wp-content/uploads/2022/10/adding-ffmpeg-variable.png)
 
-    - To verify FFmpeg Installation
+    - To verify FFmpeg Installation, use any among the commands below
         - Run: `ffmpeg` **OR** `ffmpeg -version`
 
 ### To Run the script
--   Go back to the script folder and create the following directory, you will do these only ones:
+-   Go back to the script folder and create the following directory, you will do these only when setting it up for the first time:
     - folder name: `files`
+
+-   If everything went successfully copy the audio files you wish to merge(overlay) into the `files` directory and run **`main.py`** on the terminal where your virtual environment is activated:
+    - `py main.py`
 
