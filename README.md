@@ -43,6 +43,7 @@
 
     - To verify FFmpeg Installation, use any among the commands below
         - Run: `ffmpeg` **OR** `ffmpeg -version`
+        
         ![Image 9](https://phoenixnap.com/kb/wp-content/uploads/2022/10/ffmpeg-version-command-prompt-output.png)
 
 ### To Run the script
