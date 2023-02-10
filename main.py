@@ -42,8 +42,8 @@ class AudioMerge:
         dir -> Directory where the audio files are stored.
         output_dir -> Directory where the overlayed files are output.
         """
-        date = datetime.now()
-        date_time = str(date).replace(' ', '_').replace(':', '-').replace('.', '_')
+        # date = datetime.now()
+        # date_time = str(date).replace(' ', '_').replace(':', '-').replace('.', '_')
 
         files = os.listdir(dir)
 
@@ -58,18 +58,33 @@ class AudioMerge:
                 audio_2 = self.peers[1]
                 
                 if audio_1 and audio_2 is not None:
+
+                    # if audio_1 file has no stream or has 0kb move to error_files
+                    if os.path.getsize('{}/{}'.format(dir, audio_1)) <= 0:
+                        shutil.move("{:s}/{:s}".format(dir, audio_1), "{:s}/{:s}".format(self.error_files_dir, audio_1))
+                        self.peers.remove(audio_1)
+                    
+                    # if audio_2 file has no stream or has 0kb move to error_files
+                    if os.path.getsize('{:s}/{:s}'.format(dir, audio_2)) <= 0:
+                        shutil.move("{:s}/{:s}".format(dir, audio_2), "{:s}/{:s}".format(self.error_files_dir, audio_2))
+                        self.peers.remove(audio_2)
+
                     if str(audio_1).startswith(audio_1[0:15]) == str(audio_2).startswith(audio_1[0:15]):
-                        
+                        title_format = audio_1.split('_')
+                        file_title = "{:s}_{:s}_{:s}".format(title_format[1], title_format[0], title_format[2])
                         try:
+
                             self.track_1 = AudioSegment.from_file("./{:s}/{:s}".format(dir, audio_1), format="mp3")
                             self.track_2 = AudioSegment.from_file("./{:s}/{:s}".format(dir, audio_2), format="mp3")
-                            
                             overlay_track = self.track_1.overlay(self.track_2, position=0)
-                            overlay_track.export("{:s}/{:s}-{:s}.mp3".format(self.overlayed_files_dir, audio_1[0:13], date_time), format="mp3")
+
+                            # Export overlayed file to overlayed_files dir
+                            overlay_track.export("{:s}/{:s}".format(self.overlayed_files_dir, file_title), format="mp3")
                             
                             shutil.move("{:s}/{:s}".format(dir, audio_1), "{:s}/{:s}".format(self.original_files_dir, audio_1))
                             shutil.move("{:s}/{:s}".format(dir, audio_2), "{:s}/{:s}".format(self.original_files_dir, audio_2))
                             
+                            # clear list data when file overlay is complete.
                             self.peers.clear()
                         except Exception as e:
                             return (e.add_note("Error, There was an error while perfoming overlay action,\n error file(s) are moved to ./error_file/."))

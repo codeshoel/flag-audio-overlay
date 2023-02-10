@@ -47,8 +47,10 @@
         ![Image 9](https://phoenixnap.com/kb/wp-content/uploads/2022/10/ffmpeg-version-command-prompt-output.png)
 
 ### To Run the script
--   Go back to the script folder and create the following directory, you will do these only when setting it up for the first time:
-    - folder name: `files`
+-   Various folders and their purpose:
+    - files: all audio track(mp3) to be converted should be placed within the `files` directory.
+    - initial_files: Durring the covertion the original audio files that are converted successfully will be moved to the `initial_files` directory.
+    - error_files: Durring the convertion all unconverted audio files will be moved to the `error_files` directory. 
 
 -   If everything went successfully copy the audio files you wish to merge(overlay) into the `files` directory and run **`main.py`** on the terminal where your virtual environment is activated:
     - `py main.py`

@@ -1,6 +1,10 @@
 # Dirs
 error_files
+<<<<<<< HEAD
 files
+=======
+# files
+>>>>>>> binary
 env
 overlayed_files
 initial_files
