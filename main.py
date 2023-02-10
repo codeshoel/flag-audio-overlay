@@ -64,10 +64,10 @@ class AudioMerge:
                         shutil.move("{:s}/{:s}".format(dir, audio_1), "{:s}/{:s}".format(self.error_files_dir, audio_1))
                         self.peers.remove(audio_1)
                     
-                    # if audio_2 file has no stream or has 0kb move to error_files
-                    if os.path.getsize('{:s}/{:s}'.format(dir, audio_2)) <= 0:
-                        shutil.move("{:s}/{:s}".format(dir, audio_2), "{:s}/{:s}".format(self.error_files_dir, audio_2))
-                        self.peers.remove(audio_2)
+                        # if audio_2 file has no stream or has 0kb move to error_files
+                        if os.path.getsize('{}/{}'.format(dir, audio_2)) <= 0:
+                            shutil.move("{:s}/{:s}".format(dir, audio_2), "{:s}/{:s}".format(self.error_files_dir, audio_2))
+                            self.peers.remove(audio_2)
 
                     if str(audio_1).startswith(audio_1[0:15]) == str(audio_2).startswith(audio_1[0:15]):
                         title_format = audio_1.split('_')
