@@ -1,4 +1,4 @@
-## HOW TO INSTALL FLAGE-AUDIO-OVERLAY
+## HOW TO INSTALL FLAG-AUDIO-OVERLAY
 
 - clone this repository:
     `git clone https://github.com/codeshoel/audio-overlay.git`
